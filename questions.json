@@ -1,0 +1,12 @@
+[
+  { "text": "What is 2 + 2?", "difficulty": 1, "correctAnswer": "4" },
+  { "text": "What is the capital of France?", "difficulty": 2, "correctAnswer": "Paris" },
+  { "text": "What is the square root of 16?", "difficulty": 3, "correctAnswer": "4" },
+  { "text": "Who wrote '1984'?", "difficulty": 4, "correctAnswer": "George Orwell" },
+  { "text": "What is the value of Pi to 2 decimal places?", "difficulty": 5, "correctAnswer": "3.14" },
+  { "text": "What is 25 * 25?", "difficulty": 6, "correctAnswer": "625" },
+  { "text": "What is the largest planet in our Solar System?", "difficulty": 7, "correctAnswer": "Jupiter" },
+  { "text": "What is the derivative of x^2?", "difficulty": 8, "correctAnswer": "2x" },
+  { "text": "What is the atomic number of Helium?", "difficulty": 9, "correctAnswer": "2" },
+  { "text": "What is the speed of light?", "difficulty": 10, "correctAnswer": "299792458 m/s" }
+]

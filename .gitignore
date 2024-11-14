@@ -1,0 +1,9 @@
+/node_modules
+/config/config.env
+.DS_Store
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
