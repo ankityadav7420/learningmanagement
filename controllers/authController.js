@@ -8,7 +8,7 @@ exports.register = async (req, res) => {
     const { name, email, password } = req.body;
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(400).json({ error: "Email already in use" });
+      return res.status(400).json({ error: "User already in use" });
     }
 
     const salt = await bcrypt.genSalt(10);
@@ -29,7 +29,7 @@ exports.login = async (req, res) => {
     const { email, password } = req.body;
 
     const user = await User.findOne({ email });
-    if (!user) return res.status(400).json({ error: "Email not found" });
+    if (!user) return res.status(400).json({ error: "User not found" });
 
     const validPass = await bcrypt.compare(password, user.password);
     if (!validPass) return res.status(400).json({ error: "Invalid password" });

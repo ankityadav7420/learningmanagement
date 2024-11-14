@@ -1,7 +1,10 @@
 const mongoose = require("mongoose");
 const { faker } = require("@faker-js/faker");
-const mongoURI = process.env.DB_URI_LOCAL || "mongodb://localhost:27017/lms";
+const dotenv = require("dotenv");
 
+dotenv.config({ path: "config/config.env" });
+
+const mongoURI = process.env.DB_URI_LOCAL;
 mongoose
   .connect(mongoURI, {
     useNewUrlParser: true,

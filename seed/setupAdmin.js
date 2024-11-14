@@ -1,8 +1,10 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const User = require("./models/User");
+const dotenv = require("dotenv");
 
-const mongoURI = process.env.DB_URI_LOCAL || "mongodb://localhost:27017/lms";
+dotenv.config({ path: "config/config.env" });
+const mongoURI = process.env.DB_URI_LOCAL;
 
 mongoose
   .connect(mongoURI, {
