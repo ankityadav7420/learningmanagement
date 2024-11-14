@@ -5,7 +5,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon server.js ",
-    "admin":"node seed/setupAdmin.js",
+    "admin": "node seed/setupAdmin.js",
     "question": "node seed/seedQuestions.js"
   },
   "keywords": [],
@@ -23,7 +23,8 @@
     "faker": "^6.6.6",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.8.1",
-    "nodemon": "^3.1.7"
+    "nodemon": "^3.1.7",
+    "winston": "^3.17.0"
   },
   "proxy": "http://localhost:3000"
 }
