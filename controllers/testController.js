@@ -10,7 +10,7 @@ exports.startTest = async (req, res) => {
 
   const initialQuestion = await Question.findOne({
     difficulty: initialDifficulty
-  });
+  }).select("-correctAnswer");
 
   if (!initialQuestion) {
     return res.status(404).send("No initial question found");
@@ -49,7 +49,7 @@ exports.answerQuestion = async (req, res) => {
       score: test.score
     });
   }
-  const question = await Question.findById(questionId);
+  const question = await Question.findById(questionId).select("-correctAnswer");
   if (!question) return res.status(404).send("Question not found");
 
   const isCorrect = answer === question.correctAnswer;
@@ -58,7 +58,9 @@ exports.answerQuestion = async (req, res) => {
   const nextDifficulty = isCorrect
     ? question.difficulty + 1
     : question.difficulty - 1;
-  const nextQuestion = await Question.findOne({ difficulty: nextDifficulty });
+  const nextQuestion = await Question.findOne({
+    difficulty: nextDifficulty
+  }).select("-correctAnswer");
 
   test.questions.push({ questionId, answer });
 

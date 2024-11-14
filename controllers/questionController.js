@@ -33,7 +33,9 @@ exports.getQuestionById = async (req, res) => {
       return res.status(400).json({ error: "Invalid question ID format." });
     }
 
-    const question = await Question.findById(questionId);
+    const question = await Question.findById(questionId).select(
+      "-correctAnswer"
+    );
 
     if (!question) {
       return res.status(404).json({ error: "Question not found." });

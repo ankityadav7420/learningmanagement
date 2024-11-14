@@ -9,17 +9,17 @@ const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
 const connectDB = require("./config/db");
 
-mongoose
-  .connect(dbConfig.url)
-  .then(() => console.log("MongoDB connected"))
-  .catch((err) => console.log(err));
+// mongoose
+//   .connect(dbConfig.url)
+//   .then(() => console.log("MongoDB connected"))
+//   .catch((err) => console.log(err));
 
 const app = express();
 app.use(cors());
 
 dotenv.config({ path: "config/config.env" });
 mongoose
-  .connect(dbConfig.url)
+  .connect(process.env.DB_URI_LOCAL)
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.log(err));
 
