@@ -10,13 +10,15 @@ const cookieParser = require("cookie-parser");
 const connectDB = require("./config/db");
 
 const app = express();
-const corsOptions = {
-  origin: "https://lms-frontend-self.vercel.app",
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  credentials: true
-};
-app.use(cors(corsOptions));
-
+app.use(
+  cors({
+    origin: "https://lms-frontend-self.vercel.app",
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    credentials: true,
+    "Access-Control-Allow-Origin": "*",
+    optionsSuccessStatus: 200
+  })
+);
 dotenv.config({ path: "config/config.env" });
 mongoose
   .connect(process.env.DB_URI_LOCAL)
@@ -25,14 +27,6 @@ mongoose
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(
-  cors({
-    origin: "http://localhost:3000",
-    credentials: true,
-    "Access-Control-Allow-Origin": "*",
-    optionsSuccessStatus: 200
-  })
-);
 
 app.use("/api/auth", authRoutes);
 app.use("/api/questions", questionRoutes);
