@@ -9,13 +9,13 @@ const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
 const connectDB = require("./config/db");
 
-// mongoose
-//   .connect(dbConfig.url)
-//   .then(() => console.log("MongoDB connected"))
-//   .catch((err) => console.log(err));
-
 const app = express();
-app.use(cors());
+const corsOptions = {
+  origin: "https://lms-frontend-self.vercel.app",
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  credentials: true
+};
+app.use(cors(corsOptions));
 
 dotenv.config({ path: "config/config.env" });
 mongoose
