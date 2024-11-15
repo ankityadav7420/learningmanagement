@@ -10,15 +10,6 @@ const cookieParser = require("cookie-parser");
 const connectDB = require("./config/db");
 
 const app = express();
-
-dotenv.config({ path: "config/config.env" });
-mongoose
-  .connect(process.env.DB_URI_LOCAL)
-  .then(() => console.log("MongoDB connected"))
-  .catch((err) => console.log(err));
-
-app.use(express.json());
-app.use(cookieParser());
 app.use(
   cors({
     origin: "https://lms-frontend-self.vercel.app",
@@ -28,6 +19,14 @@ app.use(
     optionsSuccessStatus: 200
   })
 );
+dotenv.config({ path: "config/config.env" });
+mongoose
+  .connect(process.env.DB_URI_LOCAL)
+  .then(() => console.log("MongoDB connected"))
+  .catch((err) => console.log(err));
+
+app.use(express.json());
+app.use(cookieParser());
 
 app.use("/api/auth", authRoutes);
 app.use("/api/questions", questionRoutes);
