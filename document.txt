@@ -1,0 +1,175 @@
+API documentation for your Learning Management System backend:
+
+API Documentation
+
+Base URL: https://learningmanagement-lm2w.onrender.com/api
+
+Authentication Routes
+
+Register User
+
+	•	Endpoint: /auth/register
+	•	Method: POST
+	•	Description: Registers a new user in the system.
+	•	Request Body:
+
+{
+  "name": "string",
+  "email": "string",
+  "password": "string"
+}
+
+
+	•	Response:
+	•	201: User registered successfully.
+	•	400: User already exists.
+	•	500: Server error during registration.
+
+Login User
+
+	•	Endpoint: /auth/login
+	•	Method: POST
+	•	Description: Logs in a user and issues a JWT token in a cookie.
+	•	Request Body:
+
+{
+  "email": "string",
+  "password": "string"
+}
+
+
+	•	Response:
+	•	200: User logged in successfully.
+	•	400: User not found or invalid password.
+	•	500: Server error during login.
+
+Logout User
+
+	•	Endpoint: /auth/logout
+	•	Method: POST
+	•	Description: Logs out the user by clearing the authentication token cookie.
+	•	Response:
+	•	200: User logged out successfully.
+	•	500: Server error during logout.
+
+Question Management Routes (Admin Protected)
+
+	Note: All endpoints in this section require both auth and adminAuth middlewares for authorization.
+
+Create Question
+
+	•	Endpoint: /questions/
+	•	Method: POST
+	•	Description: Creates a new question in the system.
+	•	Request Body:
+
+{
+  "text": "string",
+  "difficulty": "number",
+  "correctAnswer": "string"
+}
+
+
+	•	Response:
+	•	201: Question created successfully.
+	•	500: Server error.
+
+Get Question by ID
+
+	•	Endpoint: /questions/:id
+	•	Method: GET
+	•	Description: Retrieves a specific question by its ID.
+	•	Response:
+	•	200: Returns the question details.
+	•	404: Question not found.
+	•	500: Server error.
+
+Get All Questions
+
+	•	Endpoint: /questions/
+	•	Method: GET
+	•	Description: Retrieves all questions.
+	•	Response:
+	•	200: Returns an array of all questions.
+	•	500: Server error.
+
+Update Question
+
+	•	Endpoint: /questions/:id
+	•	Method: PUT
+	•	Description: Updates a specific question by ID.
+	•	Request Body:
+
+{
+  "text": "string",
+  "difficulty": "number",
+  "correctAnswer": "string"
+}
+
+
+	•	Response:
+	•	200: Question updated successfully.
+	•	404: Question not found.
+	•	500: Server error.
+
+Delete Question
+
+	•	Endpoint: /questions/:id
+	•	Method: DELETE
+	•	Description: Deletes a specific question by ID.
+	•	Response:
+	•	200: Question deleted successfully.
+	•	404: Question not found.
+	•	500: Server error.
+
+Test Management Routes
+
+	Note: All endpoints in this section require the auth middleware, and some require the adminAuth middleware for authorization.
+
+Get Test Details (Admin Only)
+
+	•	Endpoint: /tests/:uniqueURL
+	•	Method: GET
+	•	Description: Retrieves detailed test information for admins by a unique URL.
+	•	Response:
+	•	200: Returns test details.
+	•	404: Test not found.
+	•	500: Server error.
+
+Start Test
+
+	•	Endpoint: /tests/start
+	•	Method: POST
+	•	Description: Starts a new test for the authenticated user.
+	•	Response:
+	•	200: Returns the initial test question.
+	•	500: Server error.
+
+Answer Question
+
+	•	Endpoint: /tests/:testId/questions/:questionId/answer
+	•	Method: POST
+	•	Description: Submits an answer to a question within a test.
+	•	Request Body:
+
+{
+  "answer": "string"
+}
+
+
+	•	Response:
+	•	200: Answer accepted; returns the next question or final score if the test is completed.
+	•	404: Test or question not found.
+	•	500: Server error.
+
+Get Test by ID
+
+	•	Endpoint: /tests/id/:testId
+	•	Method: GET
+	•	Description: Retrieves test details by test ID.
+	•	Response:
+	•	200: Returns test details.
+	•	404: Test not found.
+	•	500: Server error.
+
+This documentation provides details on each API endpoint, its HTTP method, path, required parameters, and possible responses. Be sure to adjust error handling and permissions as needed.
