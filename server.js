@@ -12,7 +12,7 @@ const connectDB = require("./config/db");
 const app = express();
 app.use(
   cors({
-    origin: "https://lms-frontend-self.vercel.app",
+    origin: ["https://lms-frontend-self.vercel.app", "http://localhost:3000"],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     credentials: true,
     "Access-Control-Allow-Origin": "*",
@@ -35,3 +35,5 @@ app.use("/api/tests", testRoutes);
 app.listen(process.env.PORT, () => {
   console.log(`Server running on port ${process.env.PORT}`);
 });
+
+//DB_URI_LOCAL=mongodb+srv://lmsankit:vgYmmBriMkl7jn6j@cluster0.lvxvs8m.mongodb.net/lms?retryWrites=true&w=majority
