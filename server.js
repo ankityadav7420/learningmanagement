@@ -19,7 +19,7 @@ app.use(
     optionsSuccessStatus: 200
   })
 );
-dotenv.config({ path: "config/config.env" });
+dotenv.config({ path: ".env" });
 mongoose
   .connect(process.env.DB_URI_LOCAL)
   .then(() => console.log("MongoDB connected"))

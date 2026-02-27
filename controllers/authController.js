@@ -1,14 +1,16 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
+const { sendJsonResponse } = require("../utils/responseHandler");
 
 // Register a new user
 exports.register = async (req, res) => {
   try {
     const { name, email, password } = req.body;
+
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(400).json({ error: "User already in use" });
+      return sendJsonResponse(res, 400, false, "User already exists with this email");
     }
 
     const salt = await bcrypt.genSalt(10);
@@ -17,9 +19,10 @@ exports.register = async (req, res) => {
     const user = new User({ name, email, password: hashedPassword });
     await user.save();
 
-    res.status(201).json({ message: "User registered successfully" });
+    return sendJsonResponse(res, 201, true, "User registered successfully");
   } catch (error) {
-    res.status(500).json({ error: "Server error during registration" });
+    return sendJsonResponse(res, 500, false, "Registration failed due to a server error", null, error
+    );
   }
 };
 
@@ -29,44 +32,78 @@ exports.login = async (req, res) => {
     const { email, password } = req.body;
 
     const user = await User.findOne({ email });
-    if (!user) return res.status(400).json({ error: "User not found" });
+    if (!user) {
+      return sendJsonResponse(res, 400, false, "Login failed: user not found");
+    }
 
     const validPass = await bcrypt.compare(password, user.password);
-    if (!validPass) return res.status(400).json({ error: "Invalid password" });
+    if (!validPass) {
+      return sendJsonResponse( res, 400, false, "Login failed: invalid password"
+      );
+    }
 
     const token = jwt.sign(
       { _id: user._id, role: user.role },
       process.env.JWT_SECRET,
       {
-        expiresIn: "1h"
+        // Keep the JWT valid for 24 hours so login survives refreshes
+        expiresIn: "24h"
       }
     );
 
     res
+      // HTTP-only token cookie used by the backend for auth
       .cookie("token", token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "strict",
-        maxAge: 24 * 60 * 60 * 1000 // hour
+        maxAge: 24 * 60 * 60 * 1000
       })
-      .status(200)
-      .json({ message: "User logged in successfully" });
+      // Non-HTTP-only flag so the frontend can detect logged-in state on refresh
+      .cookie("clientAuth", "true", {
+        httpOnly: false,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        maxAge: 24 * 60 * 60 * 1000
+      });
+
+    return sendJsonResponse(res, 200, true, "User logged in successfully");
   } catch (error) {
-    res.status(500).json({ error: "Server error during login" });
+    return sendJsonResponse(
+      res,
+      500,
+      false,
+      "Login failed due to a server error",
+      null,
+      error
+    );
   }
 };
 
 // Log out a user
 exports.logout = async (req, res) => {
   try {
-    res.clearCookie("token", {
-      httpOnly: true,
-      sameSite: "strict",
-      secure: process.env.NODE_ENV === "production"
-    });
+    res
+      .clearCookie("token", {
+        httpOnly: true,
+        sameSite: "strict",
+        secure: process.env.NODE_ENV === "production"
+      })
+      .clearCookie("clientAuth", {
+        httpOnly: false,
+        sameSite: "strict",
+        secure: process.env.NODE_ENV === "production"
+      });
 
-    res.status(200).json({ message: "User logged out successfully" });
+    return sendJsonResponse(res, 200, true, "User logged out successfully");
   } catch (error) {
-    res.status(500).json({ error: "Server error during logout" });
+    return sendJsonResponse(
+      res,
+      500,
+      false,
+      "Logout failed due to a server error",
+      null,
+      error
+    );
   }
 };

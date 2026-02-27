@@ -1,26 +1,40 @@
 const Question = require("../models/Question");
+const { sendJsonResponse } = require("../utils/responseHandler");
 
 // Create a new question
 exports.createQuestion = async (req, res) => {
   try {
     const { text, difficulty } = req.body;
     if (!text || typeof text !== "string" || text.trim() === "") {
-      return res
-        .status(400)
-        .json({ error: "Text is required and must be a non-empty string." });
+      return sendJsonResponse(
+        res,
+        400,
+        false,
+        "Question creation failed: text is required and must be a non-empty string."
+      );
     }
     if (typeof difficulty !== "number") {
-      return res
-        .status(400)
-        .json({ error: "Difficulty is required and must be a number." });
+      return sendJsonResponse(
+        res,
+        400,
+        false,
+        "Question creation failed: difficulty is required and must be a number."
+      );
     }
 
     const question = new Question({ text, difficulty });
     await question.save();
-    res.status(201).json({ message: "New question added", question });
+    return sendJsonResponse(res, 201, true, "New question added", question);
   } catch (error) {
     console.error("Error creating question:", error.message);
-    res.status(500).json({ error: "Server error. Could not create question." });
+    return sendJsonResponse(
+      res,
+      500,
+      false,
+      "Question creation failed due to a server error.",
+      null,
+      error
+    );
   }
 };
 
@@ -30,7 +44,12 @@ exports.getQuestionById = async (req, res) => {
     const questionId = req.params.id;
 
     if (!questionId) {
-      return res.status(400).json({ error: "Invalid question ID format." });
+      return sendJsonResponse(
+        res,
+        400,
+        false,
+        "Question retrieval failed: invalid question ID."
+      );
     }
 
     const question = await Question.findById(questionId).select(
@@ -38,25 +57,50 @@ exports.getQuestionById = async (req, res) => {
     );
 
     if (!question) {
-      return res.status(404).json({ error: "Question not found." });
+      return sendJsonResponse(res, 404, false, "Question not found.");
     }
 
-    res.status(200).json({
-      message: "Question retrieved successfully",
+    return sendJsonResponse(
+      res,
+      200,
+      true,
+      "Question retrieved successfully",
       question
-    });
+    );
   } catch (error) {
     console.error("Error retrieving question:", error.message);
-    res
-      .status(500)
-      .json({ error: "Server error. Could not retrieve question." });
+    return sendJsonResponse(
+      res,
+      500,
+      false,
+      "Question retrieval failed due to a server error.",
+      null,
+      error
+    );
   }
 };
 
 // get all question
 exports.getQuestions = async (req, res) => {
-  const questions = await Question.find({});
-  res.json(questions);
+  try {
+    const questions = await Question.find({});
+    return sendJsonResponse(
+      res,
+      200,
+      true,
+      "Questions retrieved successfully",
+      questions
+    );
+  } catch (error) {
+    return sendJsonResponse(
+      res,
+      500,
+      false,
+      "Questions retrieval failed due to a server error.",
+      null,
+      error
+    );
+  }
 };
 
 // Update a question by ID (admin only)
@@ -72,16 +116,31 @@ exports.updateQuestion = async (req, res) => {
     );
 
     if (!updatedQuestion) {
-      return res.status(404).send("Question not found");
+      return sendJsonResponse(
+        res,
+        404,
+        false,
+        "Question update failed: question not found."
+      );
     }
 
-    res.send({
-      message: "Question updated successfully",
-      question: updatedQuestion
-    });
+    return sendJsonResponse(
+      res,
+      200,
+      true,
+      "Question updated successfully",
+      updatedQuestion
+    );
   } catch (error) {
     console.error(error);
-    res.status(500).send("An error occurred while updating the question");
+    return sendJsonResponse(
+      res,
+      500,
+      false,
+      "Question update failed due to a server error.",
+      null,
+      error
+    );
   }
 };
 
@@ -93,14 +152,29 @@ exports.deleteQuestion = async (req, res) => {
     const deletedQuestion = await Question.findByIdAndDelete(id);
 
     if (!deletedQuestion) {
-      return res.status(404).send("Question not found");
+      return sendJsonResponse(
+        res,
+        404,
+        false,
+        "Question deletion failed: question not found."
+      );
     }
 
-    res.send({
-      message: "Question deleted successfully"
-    });
+    return sendJsonResponse(
+      res,
+      200,
+      true,
+      "Question deleted successfully"
+    );
   } catch (error) {
     console.error(error);
-    res.status(500).send("An error occurred while deleting the question");
+    return sendJsonResponse(
+      res,
+      500,
+      false,
+      "Question deletion failed due to a server error.",
+      null,
+      error
+    );
   }
 };

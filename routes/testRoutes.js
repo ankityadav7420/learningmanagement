@@ -8,13 +8,16 @@ const {
 } = require("../controllers/testController");
 const { auth, adminAuth } = require("../middleware/authMiddleware");
 
-router.get("/:uniqueURL", auth, adminAuth, getTestDetails); // fetch by unique URL - admin
+// Fetch full test details by MongoDB _id (for internal/admin use or summary)
+router.get("/id/:testId", auth, getTestById);
+router.get("/:testId/result", auth, getTestById);
+
+// Fetch a test by its public unique URL (used in shared links)
+router.get("/url/:uniqueURL", auth, getTestDetails);
 router.post("/start", auth, startTest); //start question
 router.get("/:testId/questions", auth, getQuestion); // fetch new question
 
 // Submit an answer for a question
 router.post("/:testId/answer", auth, answerQuestion);
-
-router.get("/:testId/result", auth, getTestById);
 
 module.exports = router;
