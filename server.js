@@ -4,6 +4,8 @@ const cors = require("cors");
 const authRoutes = require("./routes/authRoutes");
 const questionRoutes = require("./routes/questionRoutes");
 const testRoutes = require("./routes/testRoutes");
+const courseRoutes = require("./routes/courseRoutes");
+const userRoutes = require("./routes/userRoutes");
 const dbConfig = require("./config/db");
 const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
@@ -31,6 +33,8 @@ app.use(cookieParser());
 app.use("/api/auth", authRoutes);
 app.use("/api/questions", questionRoutes);
 app.use("/api/tests", testRoutes);
+app.use("/api/courses", courseRoutes);
+app.use("/api/users", userRoutes);
 
 app.listen(process.env.PORT, () => {
   console.log(`Server running on port ${process.env.PORT}`);
