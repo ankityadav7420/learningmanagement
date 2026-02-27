@@ -39,5 +39,3 @@ app.use("/api/users", userRoutes);
 app.listen(process.env.PORT, () => {
   console.log(`Server running on port ${process.env.PORT}`);
 });
-
-//DB_URI_LOCAL=mongodb+srv://lmsankit:vgYmmBriMkl7jn6j@cluster0.lvxvs8m.mongodb.net/lms?retryWrites=true&w=majority
