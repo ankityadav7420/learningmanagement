@@ -56,14 +56,14 @@ exports.login = async (req, res) => {
       .cookie("token", token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
+        sameSite: "none",
         maxAge: 24 * 60 * 60 * 1000
       })
       // Non-HTTP-only flag so the frontend can detect logged-in state on refresh
       .cookie("clientAuth", "true", {
         httpOnly: false,
         secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
+        sameSite: "none",
         maxAge: 24 * 60 * 60 * 1000
       });
 
@@ -86,12 +86,12 @@ exports.logout = async (req, res) => {
     res
       .clearCookie("token", {
         httpOnly: true,
-        sameSite: "strict",
+        sameSite: "none",
         secure: process.env.NODE_ENV === "production"
       })
       .clearCookie("clientAuth", {
         httpOnly: false,
-        sameSite: "strict",
+        sameSite: "none",
         secure: process.env.NODE_ENV === "production"
       });
 
