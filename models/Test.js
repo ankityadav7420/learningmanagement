@@ -34,6 +34,10 @@ const testSchema = new mongoose.Schema(
       type: Number,
       default: 5
     },
+    attemptedQuestions: {
+      type: Number,
+      default: 0
+    },
     startTime: {
       type: Date,
       default: Date.now,
